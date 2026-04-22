@@ -678,17 +678,17 @@ def procesar_archivos_sharesub(archivo_general, archivos_servicios, archivos_ext
             año, mes, fecha_formato = extraer_año_mes_fecha(pago['fecha'])
 
             transaccion = {
-                'Plataforma': 'ShareSub',
-                'Usuario': nombre_cuenta,
-                'Servicio': nombre_servicio,
+                'Platform': 'ShareSub',
+                'Account': nombre_cuenta,
+                'Service': nombre_servicio,
                 'Sub': str(contador_sub[nombre_servicio]),
-                'Año': año,
-                'Mes': mes,
-                'Fecha': fecha_formato,
-                'Ingreso': str(pago['precio']).replace('.', ','),
-                'Comision': '',
-                'Tipo': '1',
-                'User': pago['nombre_pagador']
+                'Year': año,
+                'Month': mes,
+                'Date': fecha_formato,
+                'Revenue': str(pago['precio']).replace('.', ','),
+                'Commission': '',
+                'Type': '1',
+                'Subscriber': pago['nombre_pagador']
             }
             todas_transacciones.append(transaccion)
 
@@ -819,8 +819,8 @@ def main():
         if args.output == 'out/sharesub_transactions.csv':  # This is the default value
             # Extract year and month from the first transaction for the file name
             if transacciones:
-                año = transacciones[0]['Año']
-                mes = transacciones[0]['Mes']
+                año = transacciones[0]['Year']
+                mes = transacciones[0]['Month']
                 archivo_salida = f'out/{año}{mes}_sharesub_{nombre_cuenta}_transactions.csv'
             else:
                 archivo_salida = f'out/sharesub_{nombre_cuenta}_transactions.csv'
@@ -830,7 +830,7 @@ def main():
             os.makedirs(output_dir)
         
         with open(archivo_salida, 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['Plataforma', 'Usuario', 'Servicio', 'Sub', 'Año', 'Mes', 'Fecha', 'Ingreso', 'Comision', 'Tipo', 'User']
+            fieldnames = ['Platform', 'Account', 'Service', 'Sub', 'Year', 'Month', 'Date', 'Revenue', 'Commission', 'Type', 'Subscriber']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';')
             
             writer.writeheader()
@@ -842,18 +842,18 @@ def main():
         # Additional summary statistics
         if transacciones:
             primer_transaccion = transacciones[0]
-            print(f"📊 Summary: {primer_transaccion['Año']}-{primer_transaccion['Mes']} | {primer_transaccion['Plataforma']} | {primer_transaccion['Usuario']}")
+            print(f"📊 Summary: {primer_transaccion['Year']}-{primer_transaccion['Month']} | {primer_transaccion['Platform']} | {primer_transaccion['Account']}")
         
-        total_ingresos = sum(float(t['Ingreso'].replace(',', '.')) for t in transacciones)
+        total_ingresos = sum(float(t['Revenue'].replace(',', '.')) for t in transacciones)
         print(f"💰 Total income: {total_ingresos:.2f}€".replace('.', ','))
         
         servicios_unicos = {}
         for t in transacciones:
-            servicio = t['Servicio']
+            servicio = t['Service']
             if servicio not in servicios_unicos:
                 servicios_unicos[servicio] = {'transacciones': 0, 'ingresos': 0}
             servicios_unicos[servicio]['transacciones'] += 1
-            servicios_unicos[servicio]['ingresos'] += float(t['Ingreso'].replace(',', '.'))
+            servicios_unicos[servicio]['ingresos'] += float(t['Revenue'].replace(',', '.'))
         
         print("\n📋 Summary by service:")
         for servicio, stats in servicios_unicos.items():

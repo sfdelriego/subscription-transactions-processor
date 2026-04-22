@@ -467,17 +467,17 @@ def procesar_spliiit_transacciones(datos, usuario_override=None):
         contador_servicios_mes[clave_sub] += 1
 
         registro = {
-            'Plataforma': 'Spliiit',
-            'Usuario': usuario_override or 'user1',
-            'Servicio': servicio,
+            'Platform': 'Spliiit',
+            'Account': usuario_override or 'user1',
+            'Service': servicio,
             'Sub': contador_servicios_mes[clave_sub],
-            'Año': fecha.year,
-            'Mes': f"{fecha.month:02d}",
-            'Fecha': fecha.date().isoformat(),
-            'Ingreso': amount,
-            'Comision': tx.get('mkp_amount_com', ''),
-            'Tipo': tipo,
-            'User': transaccion.get('user', {}).get('name', 'Unknown')
+            'Year': fecha.year,
+            'Month': f"{fecha.month:02d}",
+            'Date': fecha.date().isoformat(),
+            'Revenue': amount,
+            'Commission': tx.get('mkp_amount_com', ''),
+            'Type': tipo,
+            'Subscriber': transaccion.get('user', {}).get('name', 'Unknown')
         }
 
         resultados.append(registro)
@@ -539,17 +539,17 @@ def procesar_together_transacciones(datos, usuario_override=None):
             contador_servicios_mes[clave_sub] += 1
 
             registro = {
-                'Plataforma': 'Together',
-                'Usuario': usuario_override or 'user2',
-                'Servicio': servicio,
+                'Platform': 'Together',
+                'Account': usuario_override or 'user2',
+                'Service': servicio,
                 'Sub': contador_servicios_mes[clave_sub],
-                'Año': fecha.year,
-                'Mes': f"{fecha.month:02d}",
-                'Fecha': fecha_str,
-                'Ingreso': amount,
-                'Comision': '',
-                'Tipo': 1,
-                'User': transaccion.get('otherFullName', 'Unknown User')
+                'Year': fecha.year,
+                'Month': f"{fecha.month:02d}",
+                'Date': fecha_str,
+                'Revenue': amount,
+                'Commission': '',
+                'Type': 1,
+                'Subscriber': transaccion.get('otherFullName', 'Unknown User')
             }
             
             resultados.append(registro)
@@ -674,18 +674,17 @@ def procesar_sharingful_transacciones(datos, usuario_override=None):
         contador_servicios_mes[clave_sub] += 1
 
         registro = {
-            'Plataforma': 'Sharingful',
-            'Usuario': usuario_override or 'user1',
-            'Servicio': servicio,
+            'Platform': 'Sharingful',
+            'Account': usuario_override or 'user1',
+            'Service': servicio,
             'Sub': contador_servicios_mes[clave_sub],
-            'Año': fecha.year,
-            'Mes': f"{fecha.month:02d}",
-            'Fecha': fecha.strftime('%Y-%m-%d'),
-            'Ingreso': amount,
-            'Comision': '',
-            'Tipo': 1,
-                 'User': transaccion.get('idUserFrom', transaccion.get('usuario', transaccion.get('user', 
-                     transaccion.get('client', 'Unknown User'))))
+            'Year': fecha.year,
+            'Month': f"{fecha.month:02d}",
+            'Date': fecha.strftime('%Y-%m-%d'),
+            'Revenue': amount,
+            'Commission': '',
+            'Type': 1,
+            'Subscriber': transaccion.get('idUserFrom', transaccion.get('usuario', transaccion.get('user', transaccion.get('client', 'Unknown User'))))
         }
         
         resultados.append(registro)
@@ -715,14 +714,14 @@ def exportar_resultados(resultados, formato='csv'):
             except Exception:
                 return datetime.min
         return datetime.min
-    resultados_ordenados = sorted(resultados, key=lambda r: parse_fecha(r.get('Fecha', '')))
+    resultados_ordenados = sorted(resultados, key=lambda r: parse_fecha(r.get('Date', '')))
 
     # Basic data for the file name (use the first sorted result)
     primero = resultados_ordenados[0]
-    año = primero.get('Año', datetime.now().year)
-    mes = primero.get('Mes', datetime.now().strftime('%m'))
-    plataforma = str(primero.get('Plataforma', 'plataforma')).lower()
-    usuario = str(primero.get('Usuario', 'usuario')).replace(' ', '')
+    año = primero.get('Year', datetime.now().year)
+    mes = primero.get('Month', datetime.now().strftime('%m'))
+    plataforma = str(primero.get('Platform', 'platform')).lower()
+    usuario = str(primero.get('Account', 'account')).replace(' ', '')
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     base_nombre = f"{año}{mes}_{plataforma}_{usuario}_transactions_{timestamp}"
 
@@ -744,14 +743,14 @@ def exportar_resultados(resultados, formato='csv'):
 
     for r in resultados_ordenados:
         fila = dict(r)
-        servicio = fila.get('Servicio', 'Servicio')
+        servicio = fila.get('Service', 'Service')
         # key by service and month (month may come as string "05")
         try:
-            año_key = int(fila.get('Año', 0))
+            año_key = int(fila.get('Year', 0))
         except Exception:
             año_key = 0
         try:
-            mes_raw = fila.get('Mes', 0)
+            mes_raw = fila.get('Month', 0)
             mes_key = int(mes_raw) if mes_raw not in (None, '') else 0
         except Exception:
             mes_key = 0
@@ -759,8 +758,8 @@ def exportar_resultados(resultados, formato='csv'):
         contador_por_servicio_mes[clave] += 1
         fila['Sub'] = contador_por_servicio_mes[clave]
 
-        ingreso_val = _to_float(fila.get('Ingreso', 0))
-        fila['Ingreso'] = f"{ingreso_val:.2f}".replace('.', ',')
+        ingreso_val = _to_float(fila.get('Revenue', 0))
+        fila['Revenue'] = f"{ingreso_val:.2f}".replace('.', ',')
         filas_export.append(fila)
     
     # Ensure the out folder exists
@@ -863,8 +862,8 @@ def main():
             servicios = defaultdict(int)
             total = 0
             for r in resultados:
-                servicios[r['Servicio']] += 1
-                total += r['Ingreso']
+                servicios[r['Service']] += 1
+                total += r['Revenue']
             
             for servicio, cantidad in servicios.items():
                 print(f"  - {servicio}: {cantidad} transactions")
