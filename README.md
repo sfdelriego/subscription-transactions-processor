@@ -175,22 +175,7 @@ Spliiit important note:
 - `html_descargados/`: downloaded ShareSub service HTML files
 - `out/`: generated exports
 
-## 🔒 Privacy and Publishing
-
-This project can contain sensitive local files (cookies, downloaded HTML, personal transaction data).
-Before publishing, ensure at least these paths are ignored:
-
-```gitignore
-data/cookies_*.txt
-data/*_transactions*.json
-data/sharesub_*_general*.html
-html_descargados/
-out/
-```
-
-Also verify there are no real names, emails, tokens, or cookies in committed files.
-
-## 🛠️ Common Issues
+## ️ Common Issues
 
 - `No subscriptions found on page 1`:
   Cookies likely expired or belong to another account.
