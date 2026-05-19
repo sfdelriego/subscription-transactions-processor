@@ -1,8 +1,10 @@
-# Subscription Transaction Extractor 🚀
+# Subscription Transaction Processor
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white&labelColor=101010)](https://www.python.org/)
 [![Output](https://img.shields.io/badge/Output-CSV%20%7C%20JSON%20%7C%20XLSX-0A7E3F?style=for-the-badge&logo=files&logoColor=white&labelColor=101010)](#-quick-output-preview)
 [![Platforms](https://img.shields.io/badge/Platforms-Spliiit%20Together%20Sharingful%20ShareSub-1F6FEB?style=for-the-badge&logo=databricks&logoColor=white&labelColor=101010)](#-supported-platforms)
+
+> Also available in [Español](README.es.md)
 
 Extract, normalize, and export subscription transactions from multiple platforms into one clean schema.
 
